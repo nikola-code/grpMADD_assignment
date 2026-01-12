@@ -2,7 +2,11 @@ package com.example.bmiapp;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -16,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        
         etWeight = findViewById(R.id.etWeight);
         etHeight = findViewById(R.id.etHeight);
         btnCalculate = findViewById(R.id.btnCalculate);
@@ -25,16 +30,50 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                
-                double weight = Double.parseDouble(etWeight.getText().toString());
-                double height = Double.parseDouble(etHeight.getText().toString());
+             
+                if (etWeight.getText().toString().trim().isEmpty()) {
+                    etWeight.setError("Please enter weight in kg");
+                    etWeight.requestFocus();
+                    return;
+                }
+
+                if (etHeight.getText().toString().trim().isEmpty()) {
+                    etHeight.setError("Please enter height in meters");
+                    etHeight.requestFocus();
+                    return;
+                }
+
+                double weight, height;
 
                 
+                try {
+                    weight = Double.parseDouble(etWeight.getText().toString().trim());
+                    height = Double.parseDouble(etHeight.getText().toString().trim());
+                } catch (NumberFormatException e) {
+                    Toast.makeText(MainActivity.this,
+                            "Please enter valid numeric values",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+               
+                if (weight <= 0) {
+                    etWeight.setError("Weight must be greater than 0");
+                    etWeight.requestFocus();
+                    return;
+                }
+
+                if (height <= 0) {
+                    etHeight.setError("Height must be greater than 0");
+                    etHeight.requestFocus();
+                    return;
+                }
+
+               
                 double bmi = weight / (height * height);
 
                 
                 String category;
-
                 if (bmi < 18.5) {
                     category = "Underweight";
                 } else if (bmi < 25) {
@@ -45,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                     category = "Obese";
                 }
 
-                
+          
                 tvBMIResult.setText(
                         "BMI: " + String.format("%.2f", bmi) +
                         "\nCategory: " + category
