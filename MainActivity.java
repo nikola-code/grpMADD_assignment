@@ -1,6 +1,4 @@
-
-
-    private void calculateBMI() {
+private void calculateBMI() {
         String weightStr = etWeight.getText().toString().trim();
         String heightStr = etHeight.getText().toString().trim();
 
